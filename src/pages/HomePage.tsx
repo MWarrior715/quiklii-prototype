@@ -17,12 +17,12 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <div className="text-center">
             <h1 className="text-4xl md:text-6xl font-bold mb-6 animate-fade-in">
-              Delicious food,
+              Comida deliciosa,
               <br />
-              delivered fast
+              entregada rápidamente
             </h1>
             <p className="text-xl md:text-2xl mb-8 text-orange-100 max-w-3xl mx-auto">
-              Order from your favorite restaurants and get fresh, hot meals delivered to your doorstep in minutes.
+              Pide de tus restaurantes favoritos y recibe comidas frescas y calientes en tu puerta en minutos.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
               <button
@@ -30,7 +30,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                 className="bg-white text-orange-500 px-8 py-4 rounded-lg font-semibold hover:bg-orange-50 transition-colors flex items-center justify-center space-x-2 text-lg"
               >
                 <Search className="w-5 h-5" />
-                <span>Find Restaurants</span>
+                <span>Buscar restaurantes</span>
               </button>
             </div>
           </div>
@@ -41,9 +41,9 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-800 mb-4">Why choose Quiklii?</h2>
+            <h2 className="text-3xl font-bold text-gray-800 mb-4">¿Por qué elegir Quiklii?</h2>
             <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-              We make food delivery simple, fast, and reliable
+              Hacemos que la entrega de comida sea simple, rápida y confiable
             </p>
           </div>
           
@@ -52,24 +52,24 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
               <div className="bg-orange-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Clock className="w-8 h-8 text-orange-500" />
               </div>
-              <h3 className="text-xl font-semibold mb-3">Fast Delivery</h3>
-              <p className="text-gray-600">Get your favorite meals delivered in 30 minutes or less</p>
+              <h3 className="text-xl font-semibold mb-3">Entrega Rápida</h3>
+              <p className="text-gray-600">Recibe tus comidas favoritas en 30 minutos o menos</p>
             </div>
             
             <div className="text-center p-6">
               <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Truck className="w-8 h-8 text-green-500" />
               </div>
-              <h3 className="text-xl font-semibold mb-3">Live Tracking</h3>
-              <p className="text-gray-600">Track your order in real-time from preparation to delivery</p>
+              <h3 className="text-xl font-semibold mb-3">Seguimiento en Vivo</h3>
+              <p className="text-gray-600">Sigue tu pedido en tiempo real desde la preparación hasta la entrega</p>
             </div>
             
             <div className="text-center p-6">
               <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Shield className="w-8 h-8 text-blue-500" />
               </div>
-              <h3 className="text-xl font-semibold mb-3">Safe & Secure</h3>
-              <p className="text-gray-600">Secure payments and contactless delivery options</p>
+              <h3 className="text-xl font-semibold mb-3">Seguro y Protegido</h3>
+              <p className="text-gray-600">Pagos seguros y opciones de entrega sin contacto</p>
             </div>
           </div>
         </div>
@@ -79,12 +79,12 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-800">Featured Restaurants</h2>
+            <h2 className="text-3xl font-bold text-gray-800">Restaurantes Destacados</h2>
             <button
               onClick={() => onNavigate('restaurants')}
               className="text-orange-500 hover:text-orange-600 font-semibold flex items-center space-x-1"
             >
-              <span>View All</span>
+              <span>Ver Todos</span>
               <ArrowRight className="w-5 h-5" />
             </button>
           </div>
@@ -104,15 +104,15 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
       {/* CTA Section */}
       <section className="bg-gradient-to-r from-orange-500 to-red-500 text-white py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold mb-4">Ready to order?</h2>
+          <h2 className="text-3xl font-bold mb-4">¿Listo para ordenar?</h2>
           <p className="text-xl mb-8 text-orange-100">
-            Join thousands of satisfied customers who trust Quiklii for their food delivery needs
+            Únete a miles de clientes satisfechos que confían en Quiklii para sus necesidades de entrega de alimentos
           </p>
           <button
             onClick={() => onNavigate('restaurants')}
             className="bg-white text-orange-500 px-8 py-4 rounded-lg font-semibold hover:bg-orange-50 transition-colors text-lg"
           >
-            Start Ordering Now
+            Empieza a ordenar ahora
           </button>
         </div>
       </section>

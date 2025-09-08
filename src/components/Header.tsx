@@ -36,7 +36,7 @@ const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate }) => {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
                   type="text"
-                  placeholder="Search restaurants, cuisines..."
+                  placeholder="Buscar restaurantes, cocinas..."
                   className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 />
               </div>
@@ -51,7 +51,7 @@ const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate }) => {
                 currentPage === 'restaurants' ? 'text-orange-500 font-semibold' : ''
               }`}
             >
-              Restaurants
+              Restaurantes
             </button>
 
             {/* Cart */}
@@ -80,20 +80,20 @@ const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate }) => {
                       onClick={() => onNavigate('profile')}
                       className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     >
-                      Profile
+                      Perfil
                     </button>
                     <button
                       onClick={() => onNavigate('orders')}
                       className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     >
-                      My Orders
+                      Mis Pedidos
                     </button>
                     <div className="border-t border-gray-100"></div>
                     <button
                       onClick={logout}
                       className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
                     >
-                      Sign Out
+                      Cerrar Sesión
                     </button>
                   </div>
                 </div>
@@ -103,7 +103,7 @@ const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate }) => {
                 onClick={() => onNavigate('login')}
                 className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors"
               >
-                Sign In
+                Iniciar Sesión
               </button>
             )}
           </div>
@@ -128,7 +128,7 @@ const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate }) => {
                 }}
                 className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
               >
-                Restaurants
+                Restaurantes
               </button>
               
               <button
@@ -139,7 +139,7 @@ const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate }) => {
                 className="flex items-center w-full px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
               >
                 <ShoppingCart className="w-5 h-5 mr-2" />
-                Cart ({totalItems})
+                Carrito ({totalItems})
               </button>
 
               {user ? (
@@ -151,7 +151,7 @@ const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate }) => {
                     }}
                     className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
                   >
-                    Profile
+                    Perfil
                   </button>
                   <button
                     onClick={() => {
@@ -160,7 +160,7 @@ const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate }) => {
                     }}
                     className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
                   >
-                    My Orders
+                    Mis Pedidos
                   </button>
                   <button
                     onClick={() => {
@@ -169,7 +169,7 @@ const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate }) => {
                     }}
                     className="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100 rounded-lg"
                   >
-                    Sign Out
+                    Cerrar Sesión
                   </button>
                 </>
               ) : (
@@ -180,7 +180,7 @@ const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate }) => {
                   }}
                   className="block w-full text-left px-4 py-2 bg-orange-500 text-white hover:bg-orange-600 rounded-lg"
                 >
-                  Sign In
+                  Iniciar Sesión
                 </button>
               )}
             </div>

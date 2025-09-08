@@ -15,7 +15,7 @@ const OrdersPage: React.FC<OrdersPageProps> = ({ onNavigate }) => {
       total: 27.98,
       status: 'delivered',
       date: '2024-01-15T18:30:00Z',
-      estimatedTime: 'Delivered at 6:45 PM'
+      estimatedTime: 'Entregado a las 6:45 PM'
     },
     {
       id: '12346',
@@ -24,7 +24,7 @@ const OrdersPage: React.FC<OrdersPageProps> = ({ onNavigate }) => {
       total: 25.98,
       status: 'on-way',
       date: '2024-01-15T19:15:00Z',
-      estimatedTime: 'Arriving in 10-15 minutes'
+      estimatedTime: 'Llega en 10-15 minutos'
     },
     {
       id: '12347',
@@ -33,7 +33,7 @@ const OrdersPage: React.FC<OrdersPageProps> = ({ onNavigate }) => {
       total: 28.98,
       status: 'preparing',
       date: '2024-01-15T19:30:00Z',
-      estimatedTime: 'Ready in 20-25 minutes'
+      estimatedTime: 'Listo en 20-25 minutos'
     }
   ];
 
@@ -66,11 +66,11 @@ const OrdersPage: React.FC<OrdersPageProps> = ({ onNavigate }) => {
   const formatStatus = (status: string) => {
     switch (status) {
       case 'on-way':
-        return 'On the way';
+        return 'En camino';
       case 'preparing':
-        return 'Preparing';
+        return 'En preparación';
       case 'delivered':
-        return 'Delivered';
+        return 'Entregado';
       default:
         return status;
     }
@@ -81,13 +81,13 @@ const OrdersPage: React.FC<OrdersPageProps> = ({ onNavigate }) => {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="text-6xl mb-4">📦</div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">No orders yet</h2>
-          <p className="text-gray-600 mb-6">Start ordering from your favorite restaurants</p>
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">Aún no hay pedidos</h2>
+          <p className="text-gray-600 mb-6">Empieza a pedir de tus restaurantes favoritos</p>
           <button
             onClick={() => onNavigate('restaurants')}
             className="bg-orange-500 text-white px-6 py-3 rounded-lg hover:bg-orange-600 transition-colors"
           >
-            Browse Restaurants
+            Ver restaurantes
           </button>
         </div>
       </div>
@@ -99,8 +99,8 @@ const OrdersPage: React.FC<OrdersPageProps> = ({ onNavigate }) => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">My Orders</h1>
-          <p className="text-gray-600">Track your current and past orders</p>
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">Mis Pedidos</h1>
+          <p className="text-gray-600">Sigue tus pedidos actuales y pasados</p>
         </div>
 
         {/* Orders List */}
@@ -112,7 +112,7 @@ const OrdersPage: React.FC<OrdersPageProps> = ({ onNavigate }) => {
                   <div className="flex items-center space-x-3 mb-3 md:mb-0">
                     {getStatusIcon(order.status)}
                     <div>
-                      <h3 className="font-semibold text-gray-800">Order #{order.id}</h3>
+                      <h3 className="font-semibold text-gray-800">Pedido #{order.id}</h3>
                       <p className="text-sm text-gray-600">{order.restaurant}</p>
                     </div>
                   </div>
@@ -126,7 +126,7 @@ const OrdersPage: React.FC<OrdersPageProps> = ({ onNavigate }) => {
 
                 <div className="grid md:grid-cols-3 gap-4 mb-4">
                   <div>
-                    <p className="text-sm text-gray-500 mb-1">Items</p>
+                    <p className="text-sm text-gray-500 mb-1">Artículos</p>
                     <p className="text-sm font-medium text-gray-800">
                       {order.items.join(', ')}
                     </p>
@@ -138,7 +138,7 @@ const OrdersPage: React.FC<OrdersPageProps> = ({ onNavigate }) => {
                   </div>
                   
                   <div>
-                    <p className="text-sm text-gray-500 mb-1">Status</p>
+                    <p className="text-sm text-gray-500 mb-1">Estado</p>
                     <p className="text-sm font-medium text-gray-800">{order.estimatedTime}</p>
                   </div>
                 </div>
@@ -148,12 +148,12 @@ const OrdersPage: React.FC<OrdersPageProps> = ({ onNavigate }) => {
                     <div className="flex items-center space-x-4">
                       <button className="flex items-center space-x-2 text-orange-500 hover:text-orange-600 transition-colors">
                         <MapPin className="w-4 h-4" />
-                        <span className="text-sm font-medium">Track Order</span>
+                        <span className="text-sm font-medium">Rastrear Pedido</span>
                       </button>
                       
                       {order.status === 'preparing' && (
                         <button className="text-sm text-gray-500 hover:text-gray-700 transition-colors">
-                          Contact Restaurant
+                          Contactar al Restaurante
                         </button>
                       )}
                     </div>
@@ -166,12 +166,12 @@ const OrdersPage: React.FC<OrdersPageProps> = ({ onNavigate }) => {
 
         {/* Order Again Section */}
         <div className="mt-12 text-center">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Hungry for more?</h2>
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">¿Hambriento por más?</h2>
           <button
             onClick={() => onNavigate('restaurants')}
             className="bg-orange-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-orange-600 transition-colors"
           >
-            Order Again
+            Pedir de Nuevo
           </button>
         </div>
       </div>

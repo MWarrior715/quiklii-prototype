@@ -33,13 +33,13 @@ const RestaurantDetailPage: React.FC<RestaurantDetailPageProps> = ({ restaurant,
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="text-6xl mb-4">😴</div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">Restaurant Closed</h2>
-          <p className="text-gray-600 mb-6">This restaurant is currently closed</p>
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">Restaurante Cerrado</h2>
+          <p className="text-gray-600 mb-6">Este restaurante está cerrado actualmente</p>
           <button
             onClick={() => onNavigate('restaurants')}
             className="bg-orange-500 text-white px-6 py-3 rounded-lg hover:bg-orange-600 transition-colors"
           >
-            Browse Other Restaurants
+            Explorar otros restaurantes
           </button>
         </div>
       </div>
@@ -81,7 +81,7 @@ const RestaurantDetailPage: React.FC<RestaurantDetailPageProps> = ({ restaurant,
             </div>
             <div className="flex items-center space-x-1 bg-white bg-opacity-20 backdrop-blur-sm px-3 py-1 rounded-full">
               <Truck className="w-4 h-4" />
-              <span>${restaurant.deliveryFee} delivery</span>
+              <span>${restaurant.deliveryFee} envío</span>
             </div>
           </div>
         </div>
@@ -97,7 +97,7 @@ const RestaurantDetailPage: React.FC<RestaurantDetailPageProps> = ({ restaurant,
                 <MapPin className="w-5 h-5 text-orange-500" />
               </div>
               <div>
-                <p className="font-semibold text-gray-800">Cuisine</p>
+                <p className="font-semibold text-gray-800">Cocina</p>
                 <p className="text-gray-600">{restaurant.cuisine}</p>
               </div>
             </div>
@@ -109,7 +109,7 @@ const RestaurantDetailPage: React.FC<RestaurantDetailPageProps> = ({ restaurant,
                 <Clock className="w-5 h-5 text-green-500" />
               </div>
               <div>
-                <p className="font-semibold text-gray-800">Delivery Time</p>
+                <p className="font-semibold text-gray-800">Tiempo de Entrega</p>
                 <p className="text-gray-600">{restaurant.deliveryTime}</p>
               </div>
             </div>
@@ -121,7 +121,7 @@ const RestaurantDetailPage: React.FC<RestaurantDetailPageProps> = ({ restaurant,
                 <Truck className="w-5 h-5 text-blue-500" />
               </div>
               <div>
-                <p className="font-semibold text-gray-800">Min. Order</p>
+                <p className="font-semibold text-gray-800">Pedido Mínimo</p>
                 <p className="text-gray-600">${restaurant.minOrder}</p>
               </div>
             </div>
@@ -131,7 +131,7 @@ const RestaurantDetailPage: React.FC<RestaurantDetailPageProps> = ({ restaurant,
         {/* Menu Section */}
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
           <div className="p-6 border-b border-gray-200">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">Menu</h2>
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">Menú</h2>
             
             {/* Category Filter */}
             <div className="flex flex-wrap gap-2">
@@ -145,7 +145,7 @@ const RestaurantDetailPage: React.FC<RestaurantDetailPageProps> = ({ restaurant,
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
-                  {category === 'all' ? 'All Items' : category}
+                  {category === 'all' ? 'Todos los artículos' : category}
                 </button>
               ))}
             </div>
@@ -165,8 +165,8 @@ const RestaurantDetailPage: React.FC<RestaurantDetailPageProps> = ({ restaurant,
             ) : (
               <div className="text-center py-12">
                 <div className="text-gray-400 text-6xl mb-4">🍽️</div>
-                <h3 className="text-xl font-semibold text-gray-600 mb-2">No items in this category</h3>
-                <p className="text-gray-500">Try selecting a different category</p>
+                <h3 className="text-xl font-semibold text-gray-600 mb-2">No hay artículos en esta categoría</h3>
+                <p className="text-gray-500">Intenta seleccionar una categoría diferente</p>
               </div>
             )}
           </div>

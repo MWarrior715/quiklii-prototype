@@ -19,13 +19,13 @@ const CartPage: React.FC<CartPageProps> = ({ onNavigate }) => {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <ShoppingBag className="w-20 h-20 text-gray-400 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">Your cart is empty</h2>
-          <p className="text-gray-600 mb-6">Add some delicious items to get started</p>
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">Tu carrito está vacío</h2>
+          <p className="text-gray-600 mb-6">Agrega algunos productos deliciosos para comenzar</p>
           <button
             onClick={() => onNavigate('restaurants')}
             className="bg-orange-500 text-white px-6 py-3 rounded-lg hover:bg-orange-600 transition-colors"
           >
-            Browse Restaurants
+            Ver restaurantes
           </button>
         </div>
       </div>
@@ -51,7 +51,7 @@ const CartPage: React.FC<CartPageProps> = ({ onNavigate }) => {
           >
             <ArrowLeft className="w-6 h-6" />
           </button>
-          <h1 className="text-3xl font-bold text-gray-800">Your Cart</h1>
+          <h1 className="text-3xl font-bold text-gray-800">Tu Carrito</h1>
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8">
@@ -59,7 +59,7 @@ const CartPage: React.FC<CartPageProps> = ({ onNavigate }) => {
           <div className="lg:col-span-2">
             {currentRestaurant && (
               <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-                <h3 className="font-semibold text-gray-800 mb-2">Ordering from:</h3>
+                <h3 className="font-semibold text-gray-800 mb-2">Ordenando de:</h3>
                 <div className="flex items-center space-x-3">
                   <img
                     src={currentRestaurant.image}
@@ -76,7 +76,7 @@ const CartPage: React.FC<CartPageProps> = ({ onNavigate }) => {
 
             <div className="bg-white rounded-lg shadow-md">
               <div className="p-6">
-                <h2 className="text-xl font-semibold text-gray-800 mb-4">Order Items</h2>
+                <h2 className="text-xl font-semibold text-gray-800 mb-4">Artículos de la orden</h2>
                 
                 <div className="space-y-4">
                   {items.map((item) => (
@@ -127,7 +127,7 @@ const CartPage: React.FC<CartPageProps> = ({ onNavigate }) => {
           {/* Order Summary */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-lg shadow-md p-6 sticky top-4">
-              <h3 className="text-xl font-semibold text-gray-800 mb-4">Order Summary</h3>
+              <h3 className="text-xl font-semibold text-gray-800 mb-4">Resumen de la orden</h3>
               
               <div className="space-y-3 mb-4">
                 <div className="flex justify-between text-gray-600">
@@ -135,7 +135,7 @@ const CartPage: React.FC<CartPageProps> = ({ onNavigate }) => {
                   <span>${total.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-gray-600">
-                  <span>Delivery Fee</span>
+                  <span>Costo de envío</span>
                   <span>${deliveryFee.toFixed(2)}</span>
                 </div>
                 <div className="border-t pt-3">
@@ -149,8 +149,8 @@ const CartPage: React.FC<CartPageProps> = ({ onNavigate }) => {
               {currentRestaurant && finalTotal < currentRestaurant.minOrder && (
                 <div className="bg-orange-50 border border-orange-200 rounded-lg p-3 mb-4">
                   <p className="text-sm text-orange-800">
-                    Minimum order: ${currentRestaurant.minOrder}. 
-                    Add ${(currentRestaurant.minOrder - total).toFixed(2)} more to checkout.
+                    Pedido mínimo: ${currentRestaurant.minOrder}. 
+                    Agrega ${(currentRestaurant.minOrder - total).toFixed(2)} más para finalizar la compra.
                   </p>
                 </div>
               )}
@@ -160,14 +160,14 @@ const CartPage: React.FC<CartPageProps> = ({ onNavigate }) => {
                 disabled={currentRestaurant ? finalTotal < currentRestaurant.minOrder : false}
                 className="w-full bg-orange-500 text-white py-3 px-4 rounded-lg font-semibold hover:bg-orange-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {user ? 'Proceed to Checkout' : 'Sign In to Checkout'}
+                {user ? 'Proceder al pago' : 'Inicia sesión para pagar'}
               </button>
               
               <button
                 onClick={() => onNavigate('restaurants')}
                 className="w-full mt-3 bg-gray-100 text-gray-700 py-3 px-4 rounded-lg font-semibold hover:bg-gray-200 transition-colors"
               >
-                Continue Shopping
+                Continuar comprando
               </button>
             </div>
           </div>

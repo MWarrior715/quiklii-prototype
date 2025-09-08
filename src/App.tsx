@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { AuthProvider } from './contexts/AuthContext';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { CartProvider } from './contexts/CartContext';
 import Header from './components/Header';
 import HomePage from './pages/HomePage';
@@ -9,13 +9,15 @@ import LoginPage from './pages/LoginPage';
 import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
 import OrdersPage from './pages/OrdersPage';
+import PhoneVerification from './components/PhoneVerification';
 import { Restaurant } from './types';
 
 type Page = 'home' | 'restaurants' | 'restaurant' | 'login' | 'cart' | 'checkout' | 'orders' | 'profile';
 
-function App() {
+function AppContent() {
   const [currentPage, setCurrentPage] = useState<Page>('home');
   const [selectedRestaurant, setSelectedRestaurant] = useState<Restaurant | null>(null);
+  const { user, needsPhoneVerification } = useAuth();
 
   const navigate = (page: Page, data?: any) => {
     if (page === 'restaurant' && data) {
@@ -27,18 +29,23 @@ function App() {
   useEffect(() => {
     // Update document title based on current page
     const titles = {
-      home: 'Quiklii - Food Delivery',
-      restaurants: 'Restaurants - Quiklii',
-      restaurant: selectedRestaurant ? `${selectedRestaurant.name} - Quiklii` : 'Restaurant - Quiklii',
-      login: 'Sign In - Quiklii',
-      cart: 'Cart - Quiklii',
-      checkout: 'Checkout - Quiklii',
-      orders: 'My Orders - Quiklii',
-      profile: 'Profile - Quiklii'
+      home: 'Quiklii - Delivery de Comida',
+      restaurants: 'Restaurantes - Quiklii',
+      restaurant: selectedRestaurant ? `${selectedRestaurant.name} - Quiklii` : 'Restaurante - Quiklii',
+      login: 'Iniciar Sesión - Quiklii',
+      cart: 'Carrito - Quiklii',
+      checkout: 'Finalizar Compra - Quiklii',
+      orders: 'Mis Pedidos - Quiklii',
+      profile: 'Perfil - Quiklii'
     };
     
     document.title = titles[currentPage];
   }, [currentPage, selectedRestaurant]);
+
+  // Show phone verification if user is logged in but phone not verified
+  if (user && needsPhoneVerification) {
+    return <PhoneVerification onBack={() => navigate('home')} />;
+  }
 
   const renderPage = () => {
     switch (currentPage) {
@@ -66,14 +73,20 @@ function App() {
   };
 
   return (
+    <div className="min-h-screen bg-gray-50">
+      {currentPage !== 'login' && (
+        <Header currentPage={currentPage} onNavigate={navigate} />
+      )}
+      {renderPage()}
+    </div>
+  );
+}
+
+function App() {
+  return (
     <AuthProvider>
       <CartProvider>
-        <div className="min-h-screen bg-gray-50">
-          {currentPage !== 'login' && (
-            <Header currentPage={currentPage} onNavigate={navigate} />
-          )}
-          {renderPage()}
-        </div>
+        <AppContent />
       </CartProvider>
     </AuthProvider>
   );
