@@ -27,6 +27,45 @@ Currently no test suite is configured. Consider adding:
 npm test                   # Would run tests if configured
 ```
 
+### PM2 + quick-dev.ps1 (Backend Management)
+The backend server is managed with PM2, controlled through custom PowerShell scripts.
+This ensures the backend runs in the background and survives terminal restarts.
+
+Available Scripts
+```pwsh
+.\quick-dev.ps1 start       # Start backend with PM2
+.\quick-dev.ps1 stop        # Stop backend
+.\quick-dev.ps1 restart     # Restart backend
+.\quick-dev.ps1 logs        # View backend logs
+.\quick-dev.ps1 status      # Show backend + frontend status
+```
+
+### Recommended Workflow
+Start backend (runs in background):
+```pwsh
+.\quick-dev.ps1 start
+```
+
+Start frontend (blocks terminal):
+```bash
+npm run dev
+```
+
+View backend logs anytime:
+```pwsh
+.\quick-dev.ps1 logs
+```
+
+### Seeders
+
+The backend includes seed scripts to populate sample data (restaurants + menu items).
+Run them manually when needed:
+```pwsh
+.\seed-menu.ps1             # Populate menu items for each restaurant
+```
+
+💡 Note: Frontend is not managed by PM2. Always run it with npm run dev.
+
 ## Architecture Overview
 
 ### Tech Stack
@@ -174,34 +213,11 @@ Ofrecer búsqueda de restaurantes y comercios, pedidos en línea, pagos, trackin
 
 ---
 
-## 3. Próximos pasos inmediatos
 
-1. **Backend real (Express + Postgres)**
-   - Crear API REST para usuarios, restaurantes, órdenes
-   - Conectar frontend al backend → reemplazar mock data
-
-2. **Módulo de promociones**
-   - Crear modelo `promotions` en BD
-   - Integrar con restaurantes y checkout
-
-3. **Autenticación real**
-   - Implementar JWT + bcrypt en backend
-   - Conectar login/register del frontend
-
-4. **Tiempo real**
-   - Integrar Socket.io para tracking de pedidos
-   - Notificaciones en tiempo real al cliente y restaurante
-
-5. **CI/CD**
-   - Configurar GitHub Actions para build/test
-   - Deploy en Vercel (frontend) + Render/Railway (backend)
-
----
-
-## 4. Uso de este archivo con Warp
+## 4. Uso de este archivo con Agent/Warp
 
 Este archivo combina **visión estratégica de Quiklii** + **estado actual del código indexado**.  
-Warp AI lo usará como referencia para:  
+Agent/WARP AI lo usará como referencia para:  
 - Entender el propósito del proyecto  
 - Saber en qué estado está el código ahora  
 - Guiar los siguientes pasos de desarrollo (backend, real-time, CI/CD, etc.)
