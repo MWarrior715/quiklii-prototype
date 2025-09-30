@@ -1,14 +1,12 @@
 import express from 'express';
-import { body, param } from 'express-validator';
+import { param } from 'express-validator';
 import * as menuController from '../../controllers/menuController.js';
 import { handleValidationErrors, validateMenuItem } from '../../middleware/validation.js';
+import { validateCreateMenuItem } from '../../middleware/validationJoi.js';
 import { authenticate } from '../../middleware/auth.js';
 
 const authMiddleware = authenticate;
 const router = express.Router();
-
-// Validaciones comunes (puedes reutilizar validateMenuItem desde validation.js)
-const menuItemValidations = validateMenuItem;
 
 // GET /api/v1/menu - Listar todos los items (con paginación)
 router.get('/', menuController.getAllMenuItems);
@@ -19,23 +17,18 @@ router.get('/:id', [
   handleValidationErrors
 ], menuController.getMenuItem);
 
-// GET /api/v1/restaurants/:id/menu - Obtener menú de un restaurante específico
-router.get('/restaurants/:restaurantId/menu', [
-  param('restaurantId').isUUID().withMessage('ID de restaurante inválido'),
-  handleValidationErrors
-], menuController.getRestaurantMenu);
 
 // POST /api/v1/menu - Crear nuevo item (requiere autenticación)
 router.post('/', [
   authMiddleware,
-  ...menuItemValidations
+  validateCreateMenuItem
 ], menuController.createMenuItem);
 
 // PUT /api/v1/menu/:id - Actualizar item existente (requiere autenticación)
 router.put('/:id', [
   authMiddleware,
   param('id').isUUID().withMessage('ID inválido'),
-  ...menuItemValidations
+  ...validateMenuItem
 ], menuController.updateMenuItem);
 
 // DELETE /api/v1/menu/:id - Eliminar item (soft delete) (requiere autenticación)

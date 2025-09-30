@@ -1,0 +1,7 @@
+{
+  "name": "Juan Pérez",
+  "email": "juan@test.com", 
+  "phone": "+573001234567",
+  "password": "SecurePass123!",
+  "role": "customer"
+}

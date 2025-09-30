@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { restaurantApi, transformRestaurantData } from '../services/api';
 import { Restaurant } from '../types';
 
@@ -30,31 +30,69 @@ export const useRestaurants = (params: UseRestaurantsParams = {}): UseRestaurant
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
 
+  const prevParamsRef = useRef<UseRestaurantsParams>();
+  const fetchCountRef = useRef(0);
+
+  // Memoizar params para evitar recreación del objeto
+  const memoizedParams = useMemo(() => ({
+    category: params.category,
+    minRating: params.minRating,
+    search: params.search,
+    sortBy: params.sortBy,
+    order: params.order,
+    limit: params.limit,
+    page: params.page
+  }), [
+    params.category,
+    params.minRating,
+    params.search,
+    params.sortBy,
+    params.order,
+    params.limit,
+    params.page
+  ]);
+
+  // Log cuando params cambia
+  if (JSON.stringify(memoizedParams) !== JSON.stringify(prevParamsRef.current)) {
+    console.log('🔄 [useRestaurants] Params cambió:', { prev: prevParamsRef.current, current: memoizedParams });
+    prevParamsRef.current = memoizedParams;
+  }
+
   const fetchRestaurants = useCallback(async () => {
+    fetchCountRef.current += 1;
+    console.log(`🔄 [useRestaurants] fetchRestaurants recreado #${fetchCountRef.current}, params:`, memoizedParams);
     try {
+      console.log('🔍 [useRestaurants] Iniciando fetch con params:', memoizedParams);
       setLoading(true);
       setError(null);
 
-      const response = await restaurantApi.getAll(params);
-      
+      const response = await restaurantApi.getAll(memoizedParams);
+      console.log('🔍 [useRestaurants] Respuesta de API:', response);
+
       if (response.success) {
+        console.log('🔍 [useRestaurants] Datos recibidos:', response.data);
         const transformedRestaurants = response.data.restaurants.map(transformRestaurantData);
+        console.log('🔍 [useRestaurants] Restaurantes transformados:', transformedRestaurants);
         setRestaurants(transformedRestaurants);
         setTotalItems(response.data.pagination.totalItems);
         setTotalPages(response.data.pagination.totalPages);
         setCurrentPage(response.data.pagination.currentPage);
+        console.log('🔍 [useRestaurants] Estado actualizado correctamente');
       } else {
+        console.error('❌ [useRestaurants] Error en respuesta:', response);
         setError('Error obteniendo restaurantes');
       }
     } catch (err) {
-      console.error('Error fetching restaurants:', err);
+      console.error('❌ [useRestaurants] Error en fetch:', err);
       setError('Error de conexión con el servidor');
     } finally {
       setLoading(false);
+      console.log('🔍 [useRestaurants] Fetch completado');
     }
-  }, [params]);
+  }, [memoizedParams]);
 
   useEffect(() => {
+    console.log('🚀 [useRestaurants] useEffect ejecutándose, llamando fetchRestaurants');
     fetchRestaurants();
   }, [fetchRestaurants]);
 
@@ -74,12 +112,15 @@ export const useTopRatedRestaurants = (limit: number = 10) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // No es necesario memoizar valores primitivos
+  const memoizedLimit = limit;
+
   const fetchTopRated = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
 
-      const response = await restaurantApi.getTopRated(limit);
+      const response = await restaurantApi.getTopRated(memoizedLimit);
 
       if (response.success) {
         const transformedRestaurants = response.data.restaurants.map(transformRestaurantData);
@@ -93,11 +134,11 @@ export const useTopRatedRestaurants = (limit: number = 10) => {
     } finally {
       setLoading(false);
     }
-  }, [limit]);
+  }, [memoizedLimit]);
 
   useEffect(() => {
     fetchTopRated();
-  }, [limit]); // Cambiar dependencia a solo 'limit' en lugar de 'fetchTopRated'
+  }, [fetchTopRated]);
 
   return {
     restaurants,
@@ -112,18 +153,22 @@ export const useRestaurantsByCategory = (category: string, limit: number = 20) =
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // No es necesario memoizar valores primitivos
+  const memoizedCategory = category;
+  const memoizedLimit = limit;
+
   const fetchByCategory = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
 
-      const response = await restaurantApi.getByCategory(category, limit);
-      
+      const response = await restaurantApi.getByCategory(memoizedCategory, memoizedLimit);
+
       if (response.success) {
         const transformedRestaurants = response.data.restaurants.map(transformRestaurantData);
         setRestaurants(transformedRestaurants);
       } else {
-        setError(`Error obteniendo restaurantes de ${category}`);
+        setError(`Error obteniendo restaurantes de ${memoizedCategory}`);
       }
     } catch (err) {
       console.error('Error fetching restaurants by category:', err);
@@ -131,7 +176,7 @@ export const useRestaurantsByCategory = (category: string, limit: number = 20) =
     } finally {
       setLoading(false);
     }
-  }, [category, limit]);
+  }, [memoizedCategory, memoizedLimit]);
 
   useEffect(() => {
     if (category) {

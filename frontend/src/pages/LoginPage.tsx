@@ -9,7 +9,8 @@ type LoginPageProps = NavigationProps;
 const LoginPage: React.FC<LoginPageProps> = ({ onNavigate }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
-    name: '',
+    firstName: '',
+    lastName: '',
     email: '',
     phone: '',
     password: ''
@@ -29,7 +30,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onNavigate }) => {
       return;
     }
 
-    if (!isLogin && (!formData.name || !formData.phone)) {
+    if (!isLogin && (!formData.firstName || !formData.lastName || !formData.phone)) {
       setError('Por favor completa todos los campos requeridos');
       return;
     }
@@ -40,17 +41,19 @@ const LoginPage: React.FC<LoginPageProps> = ({ onNavigate }) => {
     }
 
     try {
-      let success;
+      let result;
       if (isLogin) {
-        success = await login(formData.email, formData.password);
+        const success = await login(formData.email, formData.password);
+        result = { success, error: success ? undefined : 'Email o contraseña incorrectos' };
       } else {
-        success = await register(formData.name, formData.email, formData.phone, formData.password);
+        const { firstName, lastName, email, phone, password } = formData;
+        result = await register({ firstName, lastName, email, phone, password });
       }
 
-      if (success) {
+      if (result.success) {
         onNavigate('home');
       } else {
-        setError(isLogin ? 'Email o contraseña incorrectos' : 'Error al crear la cuenta');
+        setError(result.error || (isLogin ? 'Email o contraseña incorrectos' : 'Error al crear la cuenta'));
       }
     } catch {
       setError('Algo salió mal. Intenta nuevamente.');
@@ -109,17 +112,31 @@ const LoginPage: React.FC<LoginPageProps> = ({ onNavigate }) => {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {!isLogin && (
-              <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
-                  type="text"
-                  name="name"
-                  placeholder="Nombre completo"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required={!isLogin}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                />
+              <div className="flex space-x-4">
+                <div className="relative w-1/2">
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <input
+                    type="text"
+                    name="firstName"
+                    placeholder="Nombre"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    required={!isLogin}
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  />
+                </div>
+                <div className="relative w-1/2">
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <input
+                    type="text"
+                    name="lastName"
+                    placeholder="Apellido"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    required={!isLogin}
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  />
+                </div>
               </div>
             )}
 
@@ -215,7 +232,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onNavigate }) => {
               onClick={() => {
                 setIsLogin(!isLogin);
                 setError('');
-                setFormData({ name: '', email: '', phone: '', password: '' });
+                setFormData({ firstName: '', lastName: '', email: '', phone: '', password: '' });
               }}
               className="text-orange-500 font-semibold hover:text-orange-600 transition-colors mt-1"
             >

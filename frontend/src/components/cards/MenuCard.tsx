@@ -1,6 +1,7 @@
 import React from 'react';
 import { ShoppingCart, Clock, Leaf, Flame } from 'lucide-react';
-import { MenuItem } from '../services/menuApi';
+import { MenuItem } from '../../types';
+import { validateImageUrl } from '../../services/api';
 
 interface MenuCardProps {
   item: MenuItem;
@@ -23,15 +24,10 @@ const MenuCard: React.FC<MenuCardProps> = ({ item, onAddToCart }) => {
       {item.image && (
         <div className="relative h-48 overflow-hidden">
           <img
-            src={item.image}
+            src={validateImageUrl(item.image, item.category || 'Comida')}
             alt={`Plato: ${item.name}`}
             className="w-full h-full object-cover"
           />
-          {item.discount && item.discount > 0 && (
-            <div className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded-full text-sm font-bold">
-              -{item.discount}%
-            </div>
-          )}
         </div>
       )}
 
@@ -71,23 +67,12 @@ const MenuCard: React.FC<MenuCardProps> = ({ item, onAddToCart }) => {
         {/* Precio y botón de agregar al carrito */}
         <div className="flex justify-between items-center mt-4">
           <div className="space-y-1">
-            {item.discount && item.discount > 0 && item.discountedPrice ? (
-              <div className="text-lg">
-                <span className="line-through text-gray-400 text-sm">
-                  {formatPrice(item.price)}
-                </span>
-                <span className="text-red-500 font-bold ml-2 text-xl">
-                  {formatPrice(item.discountedPrice)}
-                </span>
-              </div>
-            ) : (
-              <div className="text-xl font-bold text-primary-600">
-                {formatPrice(item.price)}
-              </div>      
-            )}
+            <div className="text-xl font-bold text-primary-600">
+              {formatPrice(item.price)}
+            </div>
           </div>
 
-          {onAddToCart && item.available && (
+          {onAddToCart && item.isAvailable && (
             <button
               onClick={() => onAddToCart(item)}
               className="flex items-center space-x-1 bg-primary-600 hover:bg-primary-700 text-white px-3 py-2 rounded-lg transition-colors duration-200"
@@ -96,8 +81,8 @@ const MenuCard: React.FC<MenuCardProps> = ({ item, onAddToCart }) => {
               <span>Agregar</span>
             </button>
           )}
-          
-          {!item.available && (
+           
+          {!item.isAvailable && (
             <span className="text-red-500 text-sm font-medium">
               No disponible
             </span>

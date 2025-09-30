@@ -14,6 +14,7 @@ export const getAllMenuItems = async (req, res) => {
       offset,
       include: [{
         model: Restaurant,
+        as: 'restaurant',
         attributes: ['id', 'name']
       }],
       order: [['name', 'ASC']]
@@ -39,6 +40,7 @@ export const getMenuItem = async (req, res) => {
     const item = await MenuItem.findByPk(id, {
       include: [{
         model: Restaurant,
+        as: 'restaurant',
         attributes: ['id', 'name']
       }]
     });
@@ -81,7 +83,7 @@ export const createMenuItem = async (req, res) => {
     const newItem = await MenuItem.create(req.body);
 
     const itemWithRestaurant = await MenuItem.findByPk(newItem.id, {
-      include: [{ model: Restaurant, attributes: ['id', 'name'] }]
+      include: [{ model: Restaurant, as: 'restaurant', attributes: ['id', 'name'] }]
     });
 
     res.status(201).json({ success: true, data: itemWithRestaurant });
@@ -103,7 +105,7 @@ export const updateMenuItem = async (req, res) => {
     await item.update(req.body);
 
     const updatedItem = await MenuItem.findByPk(id, {
-      include: [{ model: Restaurant, attributes: ['id', 'name'] }]
+      include: [{ model: Restaurant, as: 'restaurant', attributes: ['id', 'name'] }]
     });
 
     res.json({ success: true, data: updatedItem });
@@ -137,7 +139,7 @@ export const getMenuItemsByCategory = async (req, res) => {
 
     const items = await MenuItem.findAll({
       where: { category, available: true },
-      include: [{ model: Restaurant, attributes: ['id', 'name'] }],
+      include: [{ model: Restaurant, as: 'restaurant', attributes: ['id', 'name'] }],
       order: [['name', 'ASC']]
     });
 
@@ -152,7 +154,7 @@ export const getAvailableMenuItems = async (req, res) => {
   try {
     const items = await MenuItem.findAll({
       where: { available: true },
-      include: [{ model: Restaurant, attributes: ['id', 'name'] }]
+      include: [{ model: Restaurant, as: 'restaurant', attributes: ['id', 'name'] }]
     });
 
     res.json({ success: true, data: items });
@@ -167,7 +169,7 @@ export const getMenuItemsOnSale = async (req, res) => {
     // ⚠️ En caso de que no exista findOnSale en el modelo, fallback:
     const items = await MenuItem.findAll({
       where: { onSale: true, available: true },
-      include: [{ model: Restaurant, attributes: ['id', 'name'] }]
+      include: [{ model: Restaurant, as: 'restaurant', attributes: ['id', 'name'] }]
     });
 
     res.json({ success: true, data: items });

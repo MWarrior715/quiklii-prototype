@@ -22,8 +22,17 @@ export const useMenuItems = (restaurantId?: string): UseMenuItemsResult => {
       const response = restaurantId
         ? await api.menu.getRestaurantMenu(restaurantId)
         : await api.menu.getAll();
-        
-      setMenuItems(Array.isArray(response.data) ? response.data : response.data.items);
+
+      // Handle different response structures
+      if (restaurantId) {
+        // getRestaurantMenu returns { success: true, data: MenuItem[] }
+        const apiResponse = response as { success: boolean; data: MenuItem[] };
+        setMenuItems(apiResponse.data || []);
+      } else {
+        // getAll returns { items: MenuItem[], total: number, ... }
+        const apiResponse = response as { items: MenuItem[]; total: number; currentPage: number; totalPages: number };
+        setMenuItems(apiResponse.items || []);
+      }
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Error al cargar el menú'));
     } finally {
@@ -55,7 +64,7 @@ export const useMenuItem = (itemId: number) => {
       setError(null);
       
       const response = await api.menu.getById(itemId);
-      setMenuItem(response.data);
+      setMenuItem(response as MenuItem);
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Error al cargar el ítem del menú'));
     } finally {
@@ -86,7 +95,7 @@ export const useMenuItemsOnSale = (restaurantId?: string) => {
       setError(null);
       
       const response = await api.menu.getOnSale(restaurantId);
-      setMenuItems(response.data);
+      setMenuItems(response as MenuItem[]);
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Error al cargar las promociones'));
     } finally {

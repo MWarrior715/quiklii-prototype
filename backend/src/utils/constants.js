@@ -248,3 +248,30 @@ export const VALIDATION_PATTERNS = {
   PASSWORD: /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z\d!@#$%^&*]/,
   POSTAL_CODE_COLOMBIA: /^\d{6}$/
 };
+
+// Re-exportar constantes de eventos de socket desde el archivo correcto
+export {
+  CONNECTION_EVENTS,
+  ROOM_TYPES,
+  ROOM_CONFIG,
+  SYSTEM_EVENTS,
+  FALLBACK_EVENTS,
+  RECONNECTION_CONFIG,
+  HEARTBEAT_CONFIG,
+  HEARTBEAT_EVENTS,
+  CONNECTION_STATES,
+  LOCATION_EVENTS,
+  ORDER_EVENTS,
+  PAYMENT_EVENTS,
+  COMMUNICATION_EVENTS,
+  PRESENCE_EVENTS,
+  PUSH_EVENTS,
+  METRICS_EVENTS,
+  SUPPORT_EVENTS,
+  PROMOTION_EVENTS,
+  INVENTORY_EVENTS,
+  RATING_EVENTS,
+  ADMIN_EVENTS,
+  INTEGRATION_EVENTS,
+  DEBUG_EVENTS
+} from '../constants/socketEvents.js';

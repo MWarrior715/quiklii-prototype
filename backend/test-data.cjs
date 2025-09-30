@@ -61,7 +61,7 @@ async function seedData() {
         deliveryTime: 20,
         deliveryFee: 2.50,
         minOrder: 10.00,
-        imageUrl: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop'
+        imageUrl: 'https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=400&h=300&fit=crop'
       },
       {
         name: 'Burger King',
@@ -85,7 +85,7 @@ async function seedData() {
         deliveryTime: 15,
         deliveryFee: 1.50,
         minOrder: 8.00,
-        imageUrl: 'https://images.unsplash.com/photo-1559054663-e8c0a7e3f0d7?w=400&h=300&fit=crop'
+        imageUrl: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&h=300&fit=crop',
       },
       {
         name: 'Vegetarian Heaven',

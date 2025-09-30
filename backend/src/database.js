@@ -2,10 +2,11 @@ import { Sequelize } from 'sequelize';
 import { config } from './config/environment.js';
 import fs from 'fs';
 import path from 'path';
-import { dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // Función para obtener la configuración de base de datos activa
 function getDatabaseConfig() {
@@ -68,22 +69,22 @@ function createSequelizeInstance() {
 const sequelize = createSequelizeInstance();
 
 // Función para probar la conexión
-export const connectDatabase = async () => {
+const connectDatabase = async () => {
   try {
     const dbType = config.database.current;
     await sequelize.authenticate();
     console.log(`✅ Conexión a ${dbType.toUpperCase()} establecida exitosamente`);
-    
+
     // Sincronizar modelos en desarrollo
     if (config.server.environment === 'development') {
       await sequelize.sync({ force: false });
       console.log(`🔄 Modelos sincronizados con ${dbType.toUpperCase()}`);
     }
-    
+
     return true;
   } catch (error) {
     console.error('❌ Error al conectar con la base de datos:', error.message);
-    
+
     // Si estamos usando PostgreSQL y falla, intentar cambiar a SQLite
     if (config.database.current === 'postgres') {
       console.log('🔄 Intentando conectar con SQLite como respaldo...');
@@ -91,13 +92,13 @@ export const connectDatabase = async () => {
       // Recrear configuración
       return false; // El caller debe reintentar
     }
-    
+
     process.exit(1);
   }
 };
 
 // Función para cerrar la conexión
-export const closeDatabase = async () => {
+const closeDatabase = async () => {
   try {
     await sequelize.close();
     console.log('📴 Conexión a la base de datos cerrada');
@@ -106,4 +107,5 @@ export const closeDatabase = async () => {
   }
 };
 
-export default sequelize;
+// Exports
+export { sequelize, connectDatabase, closeDatabase };

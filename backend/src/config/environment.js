@@ -42,8 +42,11 @@ export const config = {
   // JWT
   jwt: {
     secret: process.env.JWT_SECRET || 'quiklii_super_secret_key_2024',
-    expiresIn: process.env.JWT_EXPIRES_IN || '7d',
-    refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '30d'
+    refreshSecret: process.env.JWT_REFRESH_SECRET || 'quiklii_refresh_secret_key_2024',
+    accessTokenExpiresIn: process.env.JWT_ACCESS_EXPIRES_IN || '15m',
+    refreshTokenExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '30d',
+    // Mantener compatibilidad con versiones anteriores
+    expiresIn: process.env.JWT_EXPIRES_IN || '7d'
   },
 
   // Redis (para cache y sesiones)

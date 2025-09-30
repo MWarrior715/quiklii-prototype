@@ -1,6 +1,6 @@
 import React from 'react';
-import { MenuItem } from '../services/menuApi';
-import MenuCard from './MenuCard';
+import { MenuItem } from '../../services/menuApi';
+import MenuCard from '../cards/MenuCard';
 
 interface MenuListProps {
   items: MenuItem[];

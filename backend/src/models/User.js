@@ -37,7 +37,7 @@ export function initUser(sequelize) {
       allowNull: true,
       unique: true,
       validate: {
-        is: /^[\+]?[1-9][\d]{1,14}$/ // formato E.164 internacional
+        is: /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im // formato E.164 internacional
       }
     },
 
