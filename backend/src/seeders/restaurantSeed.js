@@ -1,4 +1,4 @@
-import { Restaurant } from '../models/Restaurant.js';
+import { Restaurant } from '../models/index.js';
 
 // Datos de ejemplo para restaurantes
 const restaurantSeedData = [
@@ -47,29 +47,29 @@ const restaurantSeedData = [
 ];
 
 // Función para poblar la base de datos con restaurantes de ejemplo
-export const seedRestaurants = async () => {
+const seedRestaurants = async () => {
   try {
     console.log('🌱 Iniciando seed de restaurantes...');
-    
+
     // Verificar si ya existen restaurantes
     const existingRestaurants = await Restaurant.count();
-    
+
     if (existingRestaurants > 0) {
       console.log(`⚠️  Ya existen ${existingRestaurants} restaurantes en la base de datos.`);
       console.log('💡 Para recrear los datos, elimina los restaurantes existentes primero.');
       return;
     }
-    
+
     // Crear restaurantes de ejemplo
     const createdRestaurants = await Restaurant.bulkCreate(restaurantSeedData);
-    
+
     console.log(`✅ ${createdRestaurants.length} restaurantes creados exitosamente:`);
     createdRestaurants.forEach((restaurant, index) => {
       console.log(`   ${index + 1}. ${restaurant.name} (${restaurant.category}) - ⭐${restaurant.rating}`);
     });
-    
+
     return createdRestaurants;
-    
+
   } catch (error) {
     console.error('❌ Error en seed de restaurantes:', error);
     throw error;
@@ -77,17 +77,17 @@ export const seedRestaurants = async () => {
 };
 
 // Función para limpiar todos los restaurantes (útil para desarrollo)
-export const clearRestaurants = async () => {
+const clearRestaurants = async () => {
   try {
     console.log('🗑️  Limpiando restaurantes existentes...');
-    
+
     const deletedCount = await Restaurant.destroy({
       where: {},
       truncate: true
     });
-    
+
     console.log(`✅ ${deletedCount} restaurantes eliminados.`);
-    
+
   } catch (error) {
     console.error('❌ Error limpiando restaurantes:', error);
     throw error;
@@ -95,27 +95,17 @@ export const clearRestaurants = async () => {
 };
 
 // Función para recrear los datos (limpiar y crear de nuevo)
-export const reseedRestaurants = async () => {
+const reseedRestaurants = async () => {
   try {
     await clearRestaurants();
     await seedRestaurants();
     console.log('🎉 Reseed de restaurantes completado!');
-    
+
   } catch (error) {
     console.error('❌ Error en reseed de restaurantes:', error);
     throw error;
   }
 };
 
-// Si se ejecuta directamente el archivo
-if (import.meta.url === `file://${process.argv[1]}`) {
-  seedRestaurants()
-    .then(() => {
-      console.log('✅ Seed completado exitosamente');
-      process.exit(0);
-    })
-    .catch((error) => {
-      console.error('❌ Error en seed:', error);
-      process.exit(1);
-    });
-}
+// Exports
+export { seedRestaurants, clearRestaurants, reseedRestaurants };

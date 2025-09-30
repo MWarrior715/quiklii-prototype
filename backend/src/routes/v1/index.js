@@ -8,6 +8,7 @@ import userRoutes from './users.js';
 import deliveryPersonRoutes from './deliveryPersons.js';
 import promotionRoutes from './promotions.js';
 import menuRoutes from './menu.js';
+import paymentRoutes from './payments.js';
 
 const router = express.Router();
 
@@ -25,7 +26,8 @@ router.get('/', (req, res) => {
       users: '/users',
       deliveryPersons: '/delivery-persons',
       promotions: '/promotions',
-      menu: '/menu'
+      menu: '/menu',
+      payments: '/payments'
     },
     features: [
       'Autenticación JWT',
@@ -51,5 +53,6 @@ router.use('/users', userRoutes);
 router.use('/delivery-persons', deliveryPersonRoutes);
 router.use('/promotions', promotionRoutes);
 router.use('/menu', menuRoutes);
+router.use('/payments', paymentRoutes);
 
 export default router;

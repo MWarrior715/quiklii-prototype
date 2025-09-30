@@ -1,9 +1,12 @@
 import { validationResult } from 'express-validator';
-import jwt from 'jsonwebtoken';
-import { config } from '../config/environment.js';
 import { User } from '../models/index.js';
-//import User from '../models/User.js';
-import { generateToken, generateRefreshToken } from '../services/authService.js';
+import {
+  generateTokensAndSetCookies,
+  clearAuthCookies,
+  verifyRefreshToken,
+  hashPassword,
+  verifyPassword
+} from '../services/authService.js';
 
 /**
  * Registrar nuevo usuario
@@ -12,9 +15,12 @@ import { generateToken, generateRefreshToken } from '../services/authService.js'
  */
 export const register = async (req, res, next) => {
   try {
+    console.log('🔍 [AuthController] Iniciando registro con body:', { ...req.body, password: '***' });
+
     // Verificar si hay errores de validación
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+      console.log('❌ [AuthController] Errores de validación:', errors.array());
       return res.status(400).json({
         success: false,
         message: 'Error en los datos proporcionados',
@@ -22,14 +28,19 @@ export const register = async (req, res, next) => {
       });
     }
 
-    const { name, email, phone, password, role = 'customer' } = req.body;
+    const { firstName, lastName, email, phone, password, role = 'customer' } = req.body;
+    const name = `${firstName} ${lastName}`.trim();
+    console.log('🔍 [AuthController] Datos procesados:', { name, email, phone, role });
 
     // Verificar si el usuario ya existe por email
     const existingUserByEmail = await User.findOne({ where: { email } });
     if (existingUserByEmail) {
-      return res.status(400).json({
+      console.log('❌ [AuthController] Usuario ya existe por email:', email);
+      return res.status(409).json({
         success: false,
-        message: 'Ya existe un usuario con este email'
+        message: 'Este email ya está registrado',
+        error: 'EMAIL_EXISTS',
+        field: 'email'
       });
     }
 
@@ -37,13 +48,17 @@ export const register = async (req, res, next) => {
     if (phone) {
       const existingUserByPhone = await User.findOne({ where: { phone } });
       if (existingUserByPhone) {
-        return res.status(400).json({
+        console.log('❌ [AuthController] Usuario ya existe por teléfono:', phone);
+        return res.status(409).json({
           success: false,
-          message: 'Ya existe un usuario con este número de teléfono'
+          message: 'Este número de teléfono ya está registrado',
+          error: 'PHONE_EXISTS',
+          field: 'phone'
         });
       }
     }
 
+    console.log('🔍 [AuthController] Creando nuevo usuario...');
     // Crear nuevo usuario (el password se hasheará automáticamente por el hook beforeCreate)
     const newUser = await User.create({
       name,
@@ -52,9 +67,16 @@ export const register = async (req, res, next) => {
       password,
       role
     });
+    console.log('✅ [AuthController] Usuario creado:', { id: newUser.id, name: newUser.name, email: newUser.email });
 
-    // Generar token JWT
-    const token = generateToken(newUser);
+    // Generar tokens y configurar cookies
+    console.log('🔍 [AuthController] Generando tokens...');
+    const { accessToken } = generateTokensAndSetCookies(newUser, res);
+    console.log('✅ [AuthController] Tokens generados');
+
+    // Separar nombre para la respuesta
+    const [resFirstName, ...resLastNameParts] = newUser.name.split(' ');
+    const resLastName = resLastNameParts.join(' ');
 
     // Respuesta exitosa
     res.status(201).json({
@@ -63,7 +85,8 @@ export const register = async (req, res, next) => {
       data: {
         user: {
           id: newUser.id,
-          name: newUser.name,
+          firstName: resFirstName,
+          lastName: resLastName,
           email: newUser.email,
           phone: newUser.phone,
           role: newUser.role,
@@ -71,7 +94,7 @@ export const register = async (req, res, next) => {
           isPhoneVerified: newUser.isPhoneVerified,
           createdAt: newUser.createdAt
         },
-        token
+        accessToken
       }
     });
 
@@ -92,9 +115,12 @@ export const register = async (req, res, next) => {
  */
 export const login = async (req, res, next) => {
   try {
+    console.log('🔍 [AuthController] Iniciando login con:', { email: req.body.email, password: '***' });
+
     // Verificar errores de validación
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+      console.log('❌ [AuthController] Errores de validación en login:', errors.array());
       return res.status(400).json({
         success: false,
         message: 'Error en los datos proporcionados',
@@ -105,34 +131,46 @@ export const login = async (req, res, next) => {
     const { email, password } = req.body;
 
     // Buscar usuario por email
-    const user = await User.findOne({ 
-      where: { 
+    console.log('🔍 [AuthController] Buscando usuario por email:', email);
+    const user = await User.findOne({
+      where: {
         email,
-        isActive: true 
+        isActive: true
       }
     });
 
     if (!user) {
+      console.log('❌ [AuthController] Usuario no encontrado:', email);
       return res.status(401).json({
         success: false,
         message: 'Credenciales inválidas'
       });
     }
 
+    console.log('✅ [AuthController] Usuario encontrado:', { id: user.id, name: user.name });
+
     // Verificar contraseña
+    console.log('🔍 [AuthController] Verificando contraseña...');
     const isPasswordValid = await user.validatePassword(password);
     if (!isPasswordValid) {
+      console.log('❌ [AuthController] Contraseña inválida');
       return res.status(401).json({
         success: false,
         message: 'Credenciales inválidas'
       });
     }
+
+    console.log('✅ [AuthController] Contraseña válida');
 
     // Actualizar último login
     await user.update({ lastLoginAt: new Date() });
 
-    // Generar token
-    const token = generateToken(user);
+    // Generar tokens y configurar cookies
+    const { accessToken } = generateTokensAndSetCookies(user, res);
+
+    // Separar nombre para la respuesta
+    const [resFirstName, ...resLastNameParts] = user.name.split(' ');
+    const resLastName = resLastNameParts.join(' ');
 
     // Respuesta exitosa
     res.json({
@@ -141,7 +179,8 @@ export const login = async (req, res, next) => {
       data: {
         user: {
           id: user.id,
-          name: user.name,
+          firstName: resFirstName,
+          lastName: resLastName,
           email: user.email,
           phone: user.phone,
           role: user.role,
@@ -150,7 +189,7 @@ export const login = async (req, res, next) => {
           profileImage: user.profileImage,
           lastLoginAt: user.lastLoginAt
         },
-        token
+        accessToken
       }
     });
 
@@ -174,13 +213,18 @@ export const verifyAuth = async (req, res) => {
     // El usuario ya viene del middleware authenticate
     const user = req.user;
 
+    // Separar nombre para la respuesta
+    const [resFirstName, ...resLastNameParts] = user.name.split(' ');
+    const resLastName = resLastNameParts.join(' ');
+
     res.json({
       success: true,
       message: 'Token válido',
       data: {
         user: {
           id: user.id,
-          name: user.name,
+          firstName: resFirstName,
+          lastName: resLastName,
           email: user.email,
           phone: user.phone,
           role: user.role,
@@ -201,20 +245,20 @@ export const verifyAuth = async (req, res) => {
 };
 
 /**
- * Logout (opcional - para invalidar token en el lado cliente)
+ * Logout - Limpia cookies de autenticación
  * @route POST /api/v1/auth/logout
  * @access Private
  */
 export const logout = async (req, res) => {
   try {
-    // En una implementación más avanzada, aquí se podría agregar el token a una blacklist
-    // Por ahora, simplemente confirmamos el logout
-    
+    // Limpiar cookies de autenticación
+    clearAuthCookies(res);
+
     res.json({
       success: true,
       message: 'Logout exitoso'
     });
-    
+
   } catch (error) {
     console.error('Error en logout:', error);
     res.status(500).json({
@@ -224,57 +268,43 @@ export const logout = async (req, res) => {
   }
 };
 
-// Refrescar token
-export const refreshToken = async (req, res, next) => {
+/**
+ * Renovar access token usando refresh token de cookies
+ * @route POST /api/v1/auth/refresh
+ * @access Private (requiere refresh token válido en cookies)
+ */
+export const refreshToken = async (req, res) => {
   try {
-    const { refreshToken: clientRefreshToken } = req.body;
+    // El middleware authenticateRefresh ya validó el refresh token y agregó req.user
+    const user = req.user;
 
-    if (!clientRefreshToken) {
-      return res.status(401).json({
-        success: false,
-        message: 'Refresh token requerido'
-      });
-    }
-
-    // Verificar refresh token
-    const decoded = jwt.verify(clientRefreshToken, config.jwt.secret);
-
-    // Buscar usuario
-    const user = await User.findByPk(decoded.id);
-
-    if (!user) {
-      return res.status(401).json({
-        success: false,
-        message: 'Usuario no encontrado'
-      });
-    }
-
-    // Generar nuevos tokens
-    const tokenPayload = { id: user.id, email: user.email, role: user.role };
-    const newToken = generateToken(tokenPayload);
-    const newRefreshToken = generateRefreshToken(tokenPayload);
+    // Generar nuevos tokens y configurar cookies
+    const { accessToken } = generateTokensAndSetCookies(user, res);
 
     res.json({
       success: true,
       message: 'Token renovado exitosamente',
       data: {
-        token: newToken,
-        refreshToken: newRefreshToken,
-        user
+        accessToken,
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          phone: user.phone,
+          role: user.role,
+          isEmailVerified: user.isEmailVerified,
+          isPhoneVerified: user.isPhoneVerified,
+          profileImage: user.profileImage
+        }
       }
     });
 
   } catch (error) {
     console.error('Error renovando token:', error);
-    
-    if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
-      return res.status(401).json({
-        success: false,
-        message: 'Refresh token inválido o expirado'
-      });
-    }
-
-    next(error);
+    res.status(500).json({
+      success: false,
+      message: 'Error interno del servidor'
+    });
   }
 };
 

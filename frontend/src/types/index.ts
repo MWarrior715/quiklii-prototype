@@ -3,10 +3,12 @@ export * from './props';
 
 export interface User {
   id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phone: string;
   isPhoneVerified: boolean;
+  role: 'customer' | 'restaurant' | 'admin' | 'delivery';
   address?: Address;
   favoriteRestaurants: string[];
   createdAt: Date;

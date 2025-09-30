@@ -9,8 +9,10 @@ import LoginPage from './pages/LoginPage';
 import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
 import OrdersPage from './pages/OrdersPage';
+import ProfilePage from './pages/ProfilePage';
 import PhoneVerification from './components/PhoneVerification';
 import RestaurantSubscriptionPage from './pages/RestaurantSubscriptionPage';
+import ProtectedRoute from './components/ProtectedRoute';
 import { Page, NavigationData } from './types/navigation';
 import { Restaurant } from './types';
 
@@ -36,10 +38,10 @@ function AppContent() {
       cart: 'Carrito - Quiklii',
       checkout: 'Finalizar Compra - Quiklii',
       orders: 'Mis Pedidos - Quiklii',
-      profile: 'Perfil - Quiklii',
+      profile: 'Mi Perfil - Quiklii',
       subscription: 'Inscribe tu Restaurante - Quiklii'
     };
-    
+
     document.title = titles[currentPage];
   }, [currentPage, selectedRestaurant]);
 
@@ -67,7 +69,17 @@ function AppContent() {
       case 'checkout':
         return <CheckoutPage onNavigate={navigate} />;
       case 'orders':
-        return <OrdersPage onNavigate={navigate} />;
+        return (
+          <ProtectedRoute onNavigate={navigate} requiredRole="customer">
+            <OrdersPage onNavigate={navigate} />
+          </ProtectedRoute>
+        );
+      case 'profile':
+        return (
+          <ProtectedRoute onNavigate={navigate} requiredRole="customer">
+            <ProfilePage onNavigate={navigate} />
+          </ProtectedRoute>
+        );
       case 'subscription':
         return <RestaurantSubscriptionPage onNavigate={navigate} />;
       default:

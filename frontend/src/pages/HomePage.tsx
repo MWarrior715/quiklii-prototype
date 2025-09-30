@@ -1,6 +1,6 @@
 import React from 'react';
 import { ArrowRight, Clock, Truck, Shield, Search, Loader } from 'lucide-react';
-import RestaurantCard from '../RestaurantCard';
+import RestaurantCard from '../components/cards/RestaurantCard';
 import { useTopRatedRestaurants } from '../hooks/useRestaurants';
 
 import { NavigationProps } from '../types/props';

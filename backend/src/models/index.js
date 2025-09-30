@@ -1,22 +1,23 @@
-import sequelize from '../database.js';
+import { sequelize } from '../database.js';
 
-// Importar modelos
-import { User, initUser } from './User.js';
-import { Restaurant, initRestaurant } from './Restaurant.js';
-import { Order, initOrder } from './Order.js';
-import { OrderItem, initOrderItem } from './OrderItem.js';
-import { MenuItem, initMenuItem } from './MenuItem.js';
+// Importar funciones de inicialización de modelos
+import { initUser } from './User.js';
+import { initRestaurant } from './Restaurant.js';
+import { initOrder } from './Order.js';
+import { initOrderItem } from './OrderItem.js';
+import { initMenuItem } from './MenuItem.js';
+import { initPayment } from './Payment.js';
 
 // Inicializar modelos
-const models = {
-  User: initUser(sequelize),
-  Restaurant: initRestaurant(sequelize),
-  Order: initOrder(sequelize),
-  OrderItem: initOrderItem(sequelize),
-  MenuItem: initMenuItem(sequelize)
-};
+const User = initUser(sequelize);
+const Restaurant = initRestaurant(sequelize);
+const Order = initOrder(sequelize);
+const OrderItem = initOrderItem(sequelize);
+const MenuItem = initMenuItem(sequelize);
+const Payment = initPayment(sequelize);
 
 // Configurar asociaciones entre modelos
+const models = { User, Restaurant, Order, OrderItem, MenuItem, Payment };
 Object.values(models).forEach((model) => {
   if (model.associate) {
     model.associate(models);
@@ -34,5 +35,4 @@ const syncDatabase = async () => {
   }
 };
 
-export { models as default, syncDatabase };
-export { User, Restaurant, Order, OrderItem, MenuItem };
+export { User, Restaurant, Order, OrderItem, MenuItem, Payment, syncDatabase };

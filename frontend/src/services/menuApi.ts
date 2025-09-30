@@ -36,56 +36,47 @@ export const menuApi = {
     page?: number;
     limit?: number;
   } = {}) => {
-    const queryParams = new URLSearchParams(params as any).toString();
-    return apiRequest<MenuItemsResponse>(`/menu${queryParams ? `?${queryParams}` : ''}`);
+    return apiRequest<MenuItemsResponse>('/menu', 'GET', undefined, params as Record<string, string>);
   },
 
   // Get menu item by ID
   getById: async (id: number) => {
-    return apiRequest<MenuItem>(`/menu/${id}`);
+    return apiRequest<MenuItem>(`/menu/${id}`, 'GET');
   },
 
   // Get restaurant's menu
   getRestaurantMenu: async (restaurantId: string) => {
-    return apiRequest<MenuItem[]>(`/restaurants/${restaurantId}/menu`);
+    return apiRequest<{ success: boolean; data: MenuItem[] }>(`/restaurants/${restaurantId}/menu`, 'GET');
   },
 
   // Get menu items by category
   getByCategory: async (category: string) => {
-    return apiRequest<MenuItem[]>(`/menu/category/${category}`);
+    return apiRequest<MenuItem[]>(`/menu/category/${category}`, 'GET');
   },
 
   // Get available menu items
   getAvailable: async () => {
-    return apiRequest<MenuItem[]>('/menu/available');
+    return apiRequest<MenuItem[]>('/menu/available', 'GET');
   },
 
   // Get menu items on sale
   getOnSale: async (restaurantId?: string) => {
-    const queryParams = restaurantId ? `?restaurantId=${restaurantId}` : '';
-    return apiRequest<MenuItem[]>(`/menu/on-sale${queryParams}`);
+    const params = restaurantId ? { restaurantId } : undefined;
+    return apiRequest<MenuItem[]>('/menu/on-sale', 'GET', undefined, params);
   },
 
   // Create menu item (admin/restaurant owner only)
   create: async (itemData: Omit<MenuItem, 'id'>) => {
-    return apiRequest<MenuItem>('/menu', {
-      method: 'POST',
-      body: JSON.stringify(itemData),
-    });
+    return apiRequest<MenuItem>('/menu', 'POST', itemData);
   },
 
   // Update menu item
   update: async (id: number, itemData: Partial<MenuItem>) => {
-    return apiRequest<MenuItem>(`/menu/${id}`, {
-      method: 'PUT',
-      body: JSON.stringify(itemData),
-    });
+    return apiRequest<MenuItem>(`/menu/${id}`, 'PUT', itemData);
   },
 
   // Delete menu item
   delete: async (id: number) => {
-    return apiRequest<{ message: string }>(`/menu/${id}`, {
-      method: 'DELETE',
-    });
+    return apiRequest<{ message: string }>(`/menu/${id}`, 'DELETE');
   },
 };

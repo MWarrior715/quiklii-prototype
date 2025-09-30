@@ -1,15 +1,18 @@
 import express from 'express';
+import { param } from 'express-validator';
 import { authenticate, authorize, optionalAuth } from '../../middleware/auth.js';
 import { validateRestaurant, validateUUID, validatePagination, validateRestaurantFilters } from '../../middleware/validation.js';
-import { 
-  getAllRestaurants, 
-  getRestaurantById, 
-  createRestaurant, 
-  updateRestaurant, 
+import { handleValidationErrors } from '../../middleware/validation.js';
+import {
+  getAllRestaurants,
+  getRestaurantById,
+  createRestaurant,
+  updateRestaurant,
   deleteRestaurant,
   getRestaurantsByCategory,
   getTopRatedRestaurants
 } from '../../controllers/restaurantController.js';
+import * as menuController from '../../controllers/menuController.js';
 
 const router = express.Router();
 
@@ -22,6 +25,12 @@ router.get('/', validatePagination, validateRestaurantFilters, getAllRestaurants
 
 // Obtener restaurante por ID
 router.get('/:id', validateUUID, getRestaurantById);
+
+// GET /api/v1/restaurants/:id/menu - Obtener menú de un restaurante específico
+router.get('/:restaurantId/menu', [
+  param('restaurantId').isUUID().withMessage('ID de restaurante inválido'),
+  handleValidationErrors
+], menuController.getRestaurantMenu);
 
 // Crear restaurante (sin autenticación por ahora para testing)
 router.post('/', validateRestaurant, createRestaurant);

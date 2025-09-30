@@ -10,6 +10,7 @@ import { Restaurant } from '../models/index.js';
  */
 export const getAllRestaurants = async (req, res) => {
   try {
+    console.log('🔍 [getAllRestaurants] Query params:', req.query);
     const {
       category,
       minRating,
@@ -22,37 +23,47 @@ export const getAllRestaurants = async (req, res) => {
 
     // Construir filtros
     const where = { isActive: true };
-    
+    console.log('🔍 [getAllRestaurants] Filtros iniciales:', where);
+
     if (category) {
       where.category = category;
+      console.log('🔍 [getAllRestaurants] Filtro categoría agregado:', category);
     }
-    
+
     if (minRating) {
       where.rating = { [Op.gte]: parseFloat(minRating) };
+      console.log('🔍 [getAllRestaurants] Filtro rating agregado:', minRating);
     }
-    
+
     if (search) {
       where[Op.or] = [
         { name: { [Op.like]: `%${search}%` } },
         { description: { [Op.like]: `%${search}%` } },
         { category: { [Op.like]: `%${search}%` } }
       ];
+      console.log('🔍 [getAllRestaurants] Filtro búsqueda agregado:', search);
     }
 
     // Paginación
     const offset = (parseInt(page) - 1) * parseInt(limit);
-    
+    console.log('🔍 [getAllRestaurants] Paginación - limit:', limit, 'offset:', offset);
+
     // Ordenamiento
     const validSortFields = ['name', 'rating', 'deliveryTime', 'deliveryFee', 'createdAt'];
     const sortField = validSortFields.includes(sortBy) ? sortBy : 'rating';
     const sortOrder = ['ASC', 'DESC'].includes(order.toUpperCase()) ? order.toUpperCase() : 'DESC';
+    console.log('🔍 [getAllRestaurants] Ordenamiento - field:', sortField, 'order:', sortOrder);
 
+    console.log('🔍 [getAllRestaurants] Ejecutando consulta con where:', where);
     const { count, rows: restaurants } = await Restaurant.findAndCountAll({
       where,
       order: [[sortField, sortOrder]],
       limit: parseInt(limit),
       offset: offset
     });
+
+    console.log('🔍 [getAllRestaurants] Resultados - count:', count, 'restaurants:', restaurants.length);
+    console.log('🔍 [getAllRestaurants] Primer restaurante (si existe):', restaurants[0]);
 
     res.json({
       success: true,
@@ -69,7 +80,7 @@ export const getAllRestaurants = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Error obteniendo restaurantes:', error);
+    console.error('❌ [getAllRestaurants] Error:', error);
     res.status(500).json({
       success: false,
       message: 'Error interno del servidor',
@@ -330,20 +341,26 @@ export const getRestaurantsByCategory = async (req, res) => {
   try {
     const { category } = req.params;
     const { limit = 20 } = req.query;
+    console.log('🔍 [getRestaurantsByCategory] Params:', { category, limit });
 
+    console.log('🔍 [getRestaurantsByCategory] Llamando Restaurant.findByCategory');
     const restaurants = await Restaurant.findByCategory(category);
+    console.log('🔍 [getRestaurantsByCategory] Resultados:', restaurants.length, 'restaurantes');
+
+    const limitedRestaurants = restaurants.slice(0, parseInt(limit));
+    console.log('🔍 [getRestaurantsByCategory] Después de limit:', limitedRestaurants.length);
 
     res.json({
       success: true,
       message: `Restaurantes de categoría "${category}" obtenidos exitosamente`,
       data: {
-        restaurants: restaurants.slice(0, parseInt(limit)),
+        restaurants: limitedRestaurants,
         category
       }
     });
 
   } catch (error) {
-    console.error('Error obteniendo restaurantes por categoría:', error);
+    console.error('❌ [getRestaurantsByCategory] Error:', error);
     res.status(500).json({
       success: false,
       message: 'Error interno del servidor',
@@ -360,8 +377,11 @@ export const getRestaurantsByCategory = async (req, res) => {
 export const getTopRatedRestaurants = async (req, res) => {
   try {
     const { limit = 10 } = req.query;
+    console.log('🔍 [getTopRatedRestaurants] Params:', { limit });
 
+    console.log('🔍 [getTopRatedRestaurants] Llamando Restaurant.findTopRated');
     const restaurants = await Restaurant.findTopRated(parseInt(limit));
+    console.log('🔍 [getTopRatedRestaurants] Resultados:', restaurants.length, 'restaurantes');
 
     res.json({
       success: true,
@@ -370,7 +390,7 @@ export const getTopRatedRestaurants = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Error obteniendo restaurantes mejor calificados:', error);
+    console.error('❌ [getTopRatedRestaurants] Error:', error);
     res.status(500).json({
       success: false,
       message: 'Error interno del servidor',

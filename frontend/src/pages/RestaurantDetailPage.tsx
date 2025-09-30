@@ -1,6 +1,7 @@
 import { ArrowLeft, Star, Clock, Truck, MapPin } from 'lucide-react';
 import { useMenuItems } from '../hooks/useMenuItems';
-import MenuList from '../MenuList';
+import MenuList from '../components/lists/MenuList';
+import { validateImageUrl } from '../services/api';
 
 import { RestaurantPageProps } from '../types/props';
 
@@ -32,7 +33,7 @@ const RestaurantDetailPage: React.FC<RestaurantDetailPageProps> = ({ restaurant,
       {/* Header Image */}
       <div className="relative h-64 md:h-80">
         <img
-          src={restaurant.image}
+          src={validateImageUrl(restaurant.image, restaurant.cuisine[0] || 'Restaurante')}
           alt={restaurant.name}
           className="w-full h-full object-cover"
         />

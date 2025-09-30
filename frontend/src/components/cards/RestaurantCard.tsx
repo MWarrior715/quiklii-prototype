@@ -1,6 +1,7 @@
 import React from 'react';
 import { Clock, Star, Truck, MapPin, Zap } from 'lucide-react';
-import { Restaurant } from '../types';
+import { Restaurant, ServiceType } from '../../types';
+import { validateImageUrl } from '../../services/api';
 
 interface RestaurantCardProps {
   restaurant: Restaurant;
@@ -27,7 +28,7 @@ const RestaurantCard: React.FC<RestaurantCardProps> = ({ restaurant, onClick }) 
     >
       <div className="relative">
         <img
-          src={restaurant.image}
+          src={validateImageUrl(restaurant.image, restaurant.cuisine[0] || 'Restaurante')}
           alt={restaurant.name}
           className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
         />
@@ -70,7 +71,7 @@ const RestaurantCard: React.FC<RestaurantCardProps> = ({ restaurant, onClick }) 
         </div>
         
         <div className="flex flex-wrap gap-1 mb-3">
-          {restaurant.cuisine.slice(0, 2).map((cuisine, index) => (
+          {restaurant.cuisine.slice(0, 2).map((cuisine: string, index: number) => (
             <span key={index} className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
               {cuisine}
             </span>
@@ -101,9 +102,9 @@ const RestaurantCard: React.FC<RestaurantCardProps> = ({ restaurant, onClick }) 
         
         {/* Service types */}
         <div className="flex space-x-1 mt-2">
-          {restaurant.serviceTypes.map(type => (
-            <span 
-              key={type} 
+          {restaurant.serviceTypes.map((type: ServiceType) => (
+            <span
+              key={type}
               className="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full"
             >
               {type === 'delivery' ? 'Delivery' : type === 'dining' ? 'Restaurante' : 'Nocturno'}

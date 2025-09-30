@@ -9,5 +9,8 @@ export default {
     '!src/app-db.js'
   ],
   coverageDirectory: 'coverage',
-  coverageReporters: ['text', 'lcov', 'html']
+  coverageReporters: ['text', 'lcov', 'html'],
+  transformIgnorePatterns: [
+    'node_modules/(?!((@babel/runtime|@jest/transform)|sequelize)/)'
+  ]
 };

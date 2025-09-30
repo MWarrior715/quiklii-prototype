@@ -41,10 +41,10 @@ export function initRestaurant(sequelize) {
   imageUrl: {
     type: DataTypes.STRING(500),
     allowNull: true,
-    field: 'image_url',
-    validate: {
-      isUrl: true
-    }
+    field: 'image_url'
+    // validate: {
+    //   isUrl: true
+    // }
   },
   
   category: {
@@ -165,28 +165,37 @@ Restaurant.prototype.toJSON = function() {
 
 // Métodos de clase
 Restaurant.findActive = async function() {
-  return this.findAll({
+  console.log('🔍 [Restaurant.findActive] Buscando restaurantes activos');
+  const result = await this.findAll({
     where: { isActive: true },
     order: [['rating', 'DESC'], ['name', 'ASC']]
   });
+  console.log('🔍 [Restaurant.findActive] Resultados encontrados:', result.length);
+  return result;
 };
 
 Restaurant.findByCategory = async function(category) {
-  return this.findAll({
+  console.log('🔍 [Restaurant.findByCategory] Buscando categoría:', category);
+  const result = await this.findAll({
     where: {
       category: category,
       isActive: true
     },
     order: [['rating', 'DESC']]
   });
+  console.log('🔍 [Restaurant.findByCategory] Resultados encontrados:', result.length);
+  return result;
 };
 
 Restaurant.findTopRated = async function(limit = 10) {
-  return this.findAll({
+  console.log('🔍 [Restaurant.findTopRated] Buscando top rated con limit:', limit);
+  const result = await this.findAll({
     where: { isActive: true },
     order: [['rating', 'DESC']],
     limit: limit
   });
+  console.log('🔍 [Restaurant.findTopRated] Resultados encontrados:', result.length);
+  return result;
 };
 
   return Restaurant;

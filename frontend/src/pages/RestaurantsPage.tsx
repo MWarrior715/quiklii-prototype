@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Filter, Search, MapPin, Clock, Star, Zap, Loader } from 'lucide-react';
 import { SearchFilters, ServiceType } from '../types';
-import RestaurantCard from '../RestaurantCard';
+import RestaurantCard from '../components/cards/RestaurantCard';
 import { useRestaurants } from '../hooks/useRestaurants';
 
 import { NavigationProps } from '../types/props';
