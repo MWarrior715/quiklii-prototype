@@ -1,6 +1,6 @@
-import { ValidationError } from 'sequelize';
-import orderService from '../services/orderService.js';
-import { initializeOrderSockets } from '../sockets/orderUpdates.js';
+const { ValidationError } = require('sequelize');
+const orderService = require('../services/orderService.js');
+const { initializeOrderSockets } = require('../sockets/orderUpdates.js');
 
 const orderController = {
   // Crear un nuevo pedido
@@ -178,4 +178,4 @@ const orderController = {
   }
 };
 
-export default orderController;
+module.exports = orderController;

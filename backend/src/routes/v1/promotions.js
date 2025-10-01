@@ -1,6 +1,6 @@
-import express from 'express';
-import { authenticate, authorize, optionalAuth } from '../../middleware/auth.js';
-import { validatePagination } from '../../middleware/validation.js';
+const express = require('express');
+const { authenticate, authorize, optionalAuth } = require('../../middleware/auth.js');
+const { validatePagination } = require('../../middleware/validation.js');
 
 const router = express.Router();
 
@@ -14,4 +14,4 @@ router.post('/', authenticate, authorize('admin', 'restaurant_owner'), (req, res
   res.json({ message: 'Crear promoción - Próximamente implementado' });
 });
 
-export default router;
+module.exports = router;

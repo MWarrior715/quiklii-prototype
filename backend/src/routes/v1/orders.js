@@ -1,9 +1,9 @@
-import express from 'express';
-import rateLimit from 'express-rate-limit';
-import { authenticate, authorize } from '../../middleware/auth.js';
-import { validateCreateOrder, validateConfirmPayment } from '../../middleware/validationJoi.js';
-import { validateUUID, validatePagination } from '../../middleware/validation.js';
-import orderController from '../../controllers/orderController.js';
+const express = require('express');
+const rateLimit = require('express-rate-limit');
+const { authenticate, authorize } = require('../../middleware/auth.js');
+const { validateCreateOrder, validateConfirmPayment } = require('../../middleware/validationJoi.js');
+const { validateUUID, validatePagination } = require('../../middleware/validation.js');
+const orderController = require('../../controllers/orderController.js');
 
 // Rate limiter específico para pagos
 const paymentLimiter = rateLimit({
@@ -64,4 +64,4 @@ router.get('/payments', authenticate, orderController.getUserPayments);
 // Obtener detalle de un pago
 router.get('/payment/:paymentId', authenticate, validateUUID, orderController.getPaymentById);
 
-export default router;
+module.exports = router;

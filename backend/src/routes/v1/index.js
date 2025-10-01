@@ -1,14 +1,14 @@
-import express from 'express';
+const express = require('express');
 
 // Importar rutas específicas
-import authRoutes from './auth.js';
-import restaurantRoutes from './restaurants.js';
-import orderRoutes from './orders.js';
-import userRoutes from './users.js';
-import deliveryPersonRoutes from './deliveryPersons.js';
-import promotionRoutes from './promotions.js';
-import menuRoutes from './menu.js';
-import paymentRoutes from './payments.js';
+const authRoutes = require('./auth.js');
+const restaurantRoutes = require('./restaurants.js');
+const orderRoutes = require('./orders.js');
+const userRoutes = require('./users.js');
+const deliveryPersonRoutes = require('./deliveryPersons.js');
+const promotionRoutes = require('./promotions.js');
+const menuRoutes = require('./menu.js');
+const paymentRoutes = require('./payments.js');
 
 const router = express.Router();
 
@@ -55,4 +55,4 @@ router.use('/promotions', promotionRoutes);
 router.use('/menu', menuRoutes);
 router.use('/payments', paymentRoutes);
 
-export default router;
+module.exports = router;

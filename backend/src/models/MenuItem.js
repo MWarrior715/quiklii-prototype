@@ -104,8 +104,8 @@ export const initMenuItem = (sequelize) => {
 
     image: {
       type: DataTypes.STRING(500),
-      allowNull: true,
-      validate: { isUrl: true }
+      allowNull: true
+      // validate: { isUrl: true } // Deshabilitado para permitir rutas locales
     },
 
     available: {

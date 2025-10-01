@@ -1,7 +1,7 @@
-import express from 'express';
-import { authenticate, authorize } from '../../middleware/auth.js';
-import { validateUpdateProfile, validateAddress, validateChangePassword } from '../../middleware/validation.js';
-import { getProfile, updateProfile, getAddresses, addAddress, changePassword, getAllUsers } from '../../controllers/userController.js';
+const express = require('express');
+const { authenticate, authorize } = require('../../middleware/auth.js');
+const { validateUpdateProfile, validateAddress, validateChangePassword } = require('../../middleware/validation.js');
+const { getProfile, updateProfile, getAddresses, addAddress, changePassword, getAllUsers } = require('../../controllers/userController.js');
 
 const router = express.Router();
 
@@ -23,4 +23,4 @@ router.post('/addresses', authenticate, validateAddress, addAddress);
 // Listar todos los usuarios (solo admin)
 router.get('/', authenticate, authorize('admin'), getAllUsers);
 
-export default router;
+module.exports = router;

@@ -1,9 +1,9 @@
-import express from 'express';
-import { param } from 'express-validator';
-import * as menuController from '../../controllers/menuController.js';
-import { handleValidationErrors, validateMenuItem } from '../../middleware/validation.js';
-import { validateCreateMenuItem } from '../../middleware/validationJoi.js';
-import { authenticate } from '../../middleware/auth.js';
+const express = require('express');
+const { param } = require('express-validator');
+const menuController = require('../../controllers/menuController.js');
+const { handleValidationErrors, validateMenuItem } = require('../../middleware/validation.js');
+const { validateCreateMenuItem } = require('../../middleware/validationJoi.js');
+const { authenticate } = require('../../middleware/auth.js');
 
 const authMiddleware = authenticate;
 const router = express.Router();
@@ -50,4 +50,4 @@ router.get('/available', menuController.getAvailableMenuItems);
 // GET /api/v1/menu/on-sale - Obtener items en promoción
 router.get('/on-sale', menuController.getMenuItemsOnSale);
 
-export default router;
+module.exports = router;

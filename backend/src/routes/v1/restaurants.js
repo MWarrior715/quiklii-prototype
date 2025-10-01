@@ -1,9 +1,8 @@
-import express from 'express';
-import { param } from 'express-validator';
-import { authenticate, authorize, optionalAuth } from '../../middleware/auth.js';
-import { validateRestaurant, validateUUID, validatePagination, validateRestaurantFilters } from '../../middleware/validation.js';
-import { handleValidationErrors } from '../../middleware/validation.js';
-import {
+const express = require('express');
+const { param } = require('express-validator');
+const { authenticate, authorize, optionalAuth } = require('../../middleware/auth.js');
+const { validateRestaurant, validateUUID, validatePagination, validateRestaurantFilters, handleValidationErrors } = require('../../middleware/validation.js');
+const {
   getAllRestaurants,
   getRestaurantById,
   createRestaurant,
@@ -11,8 +10,8 @@ import {
   deleteRestaurant,
   getRestaurantsByCategory,
   getTopRatedRestaurants
-} from '../../controllers/restaurantController.js';
-import * as menuController from '../../controllers/menuController.js';
+} = require('../../controllers/restaurantController.js');
+const menuController = require('../../controllers/menuController.js');
 
 const router = express.Router();
 
@@ -41,4 +40,4 @@ router.put('/:id', validateUUID, updateRestaurant);
 // Eliminar restaurante (sin autenticación por ahora para testing)
 router.delete('/:id', validateUUID, deleteRestaurant);
 
-export default router;
+module.exports = router;

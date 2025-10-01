@@ -1,8 +1,8 @@
-import express from 'express';
-import rateLimit from 'express-rate-limit';
-import { validateLogin, validateRegister } from '../../middleware/validationJoi.js';
-import { authenticate, authenticateRefresh } from '../../middleware/auth.js';
-import { register, login, logout, refreshToken, verifyEmail, forgotPassword, verifyAuth } from '../../controllers/authController.js';
+const express = require('express');
+const rateLimit = require('express-rate-limit');
+const { validateLogin, validateRegister } = require('../../middleware/validationJoi.js');
+const { authenticate, authenticateRefresh } = require('../../middleware/auth.js');
+const { register, login, logout, refreshToken, verifyEmail, forgotPassword, verifyAuth } = require('../../controllers/authController.js');
 
 // Rate limiter específico para autenticación
 const authLimiter = rateLimit({
@@ -39,4 +39,4 @@ router.post('/verify-email', verifyEmail);
 // Recuperar contraseña
 router.post('/forgot-password', forgotPassword);
 
-export default router;
+module.exports = router;

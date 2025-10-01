@@ -1,26 +1,33 @@
-import express from 'express';
-import cors from 'cors';
-import helmet from 'helmet';
-import morgan from 'morgan';
-import compression from 'compression';
-import rateLimit from 'express-rate-limit';
-import { createServer } from 'http';
-import { Server } from 'socket.io';
-import dotenv from 'dotenv';
+// backend/src/app-db.js
+const express = require('express');
+const cors = require('cors');
+const helmet = require('helmet');
+const morgan = require('morgan');
+const compression = require('compression');
+const rateLimit = require('express-rate-limit');
+const { createServer } = require('http');
+const { Server } = require('socket.io');
+const dotenv = require('dotenv');
+const path = require('path');
+const fs = require('fs');
 
 // Importar configuración y base de datos
-import { config } from './config/environment.js';
-import { connectDatabase } from './database.js';
-import { errorHandler } from './middleware/errorHandler.js';
+const { config } = require('./config/environment.js');
+const { connectDatabase } = require('./database.js');
+const { errorHandler } = require('./middleware/errorHandler.js');
 
 // Importar rutas
-import v1Routes from './routes/v1/index.js';
+const v1Routes = require('./routes/v1/index.js');
+const uploadRoutes = require('./routes/uploadRoutes.js');
+
+// Importar middleware de imágenes
+const { imageFallbackMiddleware } = require('./middleware/imageFallback.js');
 
 // Importar servicios de tiempo real
-import { initializeRealtimeService } from './services/realtimeService.js';
-import { initializeRoomManager } from './sockets/roomManager.js';
-import { initializeFallbackService } from './services/fallbackService.js';
-import { initializeReconnectionService } from './services/reconnectionService.js';
+const { initializeRealtimeService } = require('./services/realtimeService.js');
+const { initializeRoomManager } = require('./sockets/roomManager.js');
+const { initializeFallbackService } = require('./services/fallbackService.js');
+const { initializeReconnectionService } = require('./services/reconnectionService.js');
 
 // Cargar variables de entorno
 dotenv.config();
@@ -142,6 +149,26 @@ app.use(generalLimiter);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
+// Crear directorios de uploads si no existen
+const uploadsDir = path.join(process.cwd(), 'uploads');
+const imagesDir = path.join(uploadsDir, 'images');
+const tempDir = path.join(imagesDir, 'temp');
+const restaurantsDir = path.join(imagesDir, 'restaurants');
+const productsDir = path.join(imagesDir, 'products');
+const profilesDir = path.join(imagesDir, 'profiles');
+
+const dirsToCreate = [uploadsDir, imagesDir, tempDir, restaurantsDir, productsDir, profilesDir];
+
+dirsToCreate.forEach(dir => {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+});
+
+// Servir archivos estáticos desde /uploads con middleware de fallback
+app.use('/uploads', imageFallbackMiddleware);
+app.use('/uploads', express.static(uploadsDir));
+
 // Inicializar servicios de tiempo real avanzados
 const realtimeService = initializeRealtimeService(io);
 const roomManager = initializeRoomManager(io);
@@ -160,7 +187,7 @@ io.use(async (socket, next) => {
     }
 
     // Verificar token JWT
-    const jwt = await import('jsonwebtoken');
+    const jwt = require('jsonwebtoken');
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     // Agregar información del usuario al socket
@@ -235,7 +262,7 @@ app.get('/', (req, res) => {
       api: '/api/v1',
       docs: '/api/v1/docs'
     },
-    features: ['REST API', 'Real-time WebSocket', 'Advanced Room Management', 'JWT Authentication', 'Fallback SSE/Polling', 'Auto-reconnection', 'Colombian payments'],
+    features: ['REST API', 'Real-time WebSocket', 'Advanced Room Management', 'JWT Authentication', 'Fallback SSE/Polling', 'Auto-reconnection', 'Colombian payments', 'Image Upload & Optimization'],
     environment: process.env.NODE_ENV || 'development'
   });
 });
@@ -354,8 +381,14 @@ app.delete('/api/v1/realtime/poll/:userId/:clientId', (req, res) => {
   }
 });
 
+// Servir imágenes desde /images
+app.use('/images', express.static(path.join(__dirname, '../uploads/images')));
+
 // API Routes v1
 app.use('/api/v1', v1Routes);
+
+// Rutas de upload
+app.use('/api/v1/upload', uploadRoutes);
 
 // Middleware de manejo de errores (debe ir al final)
 app.use(errorHandler);
@@ -416,6 +449,8 @@ const startServer = async () => {
   • GET  /api/v1           → Rutas principales de la API
   • POST /api/v1/auth/register → Registro de usuario
   • POST /api/v1/auth/login    → Login de usuario
+  • POST /api/v1/upload/restaurant-image → Cargar imagen de restaurante
+  • POST /api/v1/upload/product-image    → Cargar imagen de producto
 
   ✅ Listo para recibir requests!
   `);
@@ -447,4 +482,4 @@ process.on('SIGINT', () => {
 // Iniciar servidor
 startServer();
 
-export default app;
+module.exports = app;

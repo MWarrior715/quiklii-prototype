@@ -1,5 +1,5 @@
-import express from 'express';
-import { authenticate, authorize } from '../../middleware/auth.js';
+const express = require('express');
+const { authenticate, authorize } = require('../../middleware/auth.js');
 
 const router = express.Router();
 
@@ -18,4 +18,4 @@ router.post('/location', authenticate, authorize('delivery_person'), (req, res) 
   res.json({ message: 'Actualizar ubicación - Próximamente implementado' });
 });
 
-export default router;
+module.exports = router;

@@ -1,9 +1,9 @@
-import express from 'express';
-import rateLimit from 'express-rate-limit';
-import { authenticate, authorize } from '../../middleware/auth.js';
-import { validateCreatePayment, validatePaymentStatus } from '../../middleware/validationJoi.js';
-import { validateUUID, validatePagination } from '../../middleware/validation.js';
-import paymentController from '../../controllers/paymentController.js';
+const express = require('express');
+const rateLimit = require('express-rate-limit');
+const { authenticate, authorize } = require('../../middleware/auth.js');
+const { validateCreatePayment, validatePaymentStatus } = require('../../middleware/validationJoi.js');
+const { validateUUID, validatePagination } = require('../../middleware/validation.js');
+const paymentController = require('../../controllers/paymentController.js');
 
 // Rate limiter específico para pagos
 const paymentLimiter = rateLimit({
@@ -217,4 +217,4 @@ router.post('/webhook/wompi', webhookLimiter, paymentController.handleWebhook);
  */
 router.get('/stats', authenticate, authorize('admin'), statsLimiter, paymentController.getPaymentStats);
 
-export default router;
+module.exports = router;

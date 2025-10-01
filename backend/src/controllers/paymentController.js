@@ -1,7 +1,7 @@
-import { ValidationError } from 'sequelize';
-import { Payment, Order, User } from '../models/index.js';
-import wompiService from '../services/wompiService.js';
-import paymentRetryService from '../services/paymentRetryService.js';
+const { ValidationError } = require('sequelize');
+const { Payment, Order, User } = require('../models/index.js');
+const wompiService = require('../services/wompiService.js');
+const paymentRetryService = require('../services/paymentRetryService.js');
 
 /**
  * Controlador específico para manejo de pagos
@@ -464,4 +464,4 @@ const paymentController = {
   }
 };
 
-export default paymentController;
+module.exports = paymentController;
