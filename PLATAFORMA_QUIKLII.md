@@ -255,4 +255,4 @@ La arquitectura actual permite un flujo de trabajo ágil:
 * **Desarrollo**: SQLite + Vite + PM2.
 * **Producción**: PostgreSQL + PM2 con logging + despliegue escalable.
 
-Este documento y está alineado con la estructura real del proyecto (`project_structure.txt`).
+Este documento y está alineado con la estructura real del proyecto (`project_full_structure.txt`).
