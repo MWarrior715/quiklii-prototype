@@ -1,6 +1,6 @@
 # 📦 Plataforma Quiklii - Arquitectura Técnica
 
-Este documento describe la arquitectura técnica de **Quiklii**, la plataforma de delivery y descubrimiento de locales gastronómicos. Está basado en la estructura real del proyecto (`project_structure.txt`) y refleja el estado actual de la aplicación desde el desarrollo hasta la preparación para producción.
+Este documento describe la arquitectura técnica de **Quiklii**, la plataforma de delivery y descubrimiento de locales gastronómicos. Está basado en la estructura real del proyecto (`project_full_structure.txt`) y refleja el estado actual de la aplicación desde el desarrollo hasta la preparación para producción.
 
 ---
 
