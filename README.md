@@ -96,7 +96,6 @@ npm run preview # Preview build
 
 - Ver [DEVELOPMENT.md](DEVELOPMENT.md) para guía detallada de desarrollo
 - Ver [PLATAFORMA_QUIKLII.md](PLATAFORMA_QUIKLII.md) para especificación completa
-- Ver [WARP.md](WARP.md) para contexto técnico y arquitectura
 
 ## 📄 Licencia
 
